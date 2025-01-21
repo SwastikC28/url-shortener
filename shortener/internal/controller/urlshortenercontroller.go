@@ -33,16 +33,16 @@ func (controller *URLShortenerController) RegisterRoutes(router *mux.Router) {
 func (controller *URLShortenerController) shortenURL(w http.ResponseWriter, r *http.Request) {
 	logger := zerolog.Ctx(r.Context()).With().Str("action", "shortenURL").Logger()
 
-	cmd := &command.CreateShortenURLCommand{}
+	cmd := command.CreateShortenURLCommand{}
 
-	err := web.UnmarshalJSON(r, cmd)
+	err := web.UnmarshalJSON(r, &cmd)
 	if err != nil {
 		logger.Err(err).Msg("Error while unmarshalling JSON")
 		web.RespondJSON(w, 400, err)
 		return
 	}
 
-	shortURL, err := controller.service.ShortenURL(cmd)
+	shortURL, err := controller.service.ShortenURL(&cmd)
 	if err != nil {
 		logger.Err(err).Msg("Error while shortening URL")
 		web.RespondJSON(w, 400, err)
@@ -68,8 +68,6 @@ func (controller *URLShortenerController) redirect(w http.ResponseWriter, r *htt
 		web.RespondJSON(w, 400, err)
 		return
 	}
-
-	fmt.Println(url)
 
 	longURL := fmt.Sprintf("https://%s", url)
 	http.Redirect(w, r, longURL, http.StatusTemporaryRedirect)
@@ -103,9 +101,12 @@ func (controller *URLShortenerController) analytics(w http.ResponseWriter, r *ht
 	vars := mux.Vars(r)
 	alias := vars["alias"]
 
-	err := controller.service.GetAnalytics(alias)
+	urlData, err := controller.service.GetAnalytics(alias)
 	if err != nil {
 		logger.Err(err).Msg("Error while getting data")
+		web.RespondJSON(w, 400, err.Error())
 		return
 	}
+
+	web.RespondJSON(w, 200, urlData)
 }
