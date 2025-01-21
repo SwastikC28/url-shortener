@@ -18,16 +18,14 @@ func NewURLShortenerService(repo *repository.URLShortenerRepository) *URLShorten
 }
 
 func (service *URLShortenerService) ShortenURL(cmd *command.CreateShortenURLCommand) (string, error) {
-	alias := cmd.LongURL
-	if cmd.CustomAlias != "" {
-		alias = cmd.CustomAlias
+	alias := cmd.CustomAlias
+	if cmd.CustomAlias == "" {
+		alias = service.shortenURL()
 	}
 
-	shortURL := service.shortenURL()
-
 	data := model.URLData{
-		ShortURL:         shortURL,
-		LongURL:          alias,
+		ShortURL:         alias,
+		LongURL:          cmd.LongURL,
 		AccessCount:      0,
 		AccessTimestamps: make([]string, 0),
 	}
@@ -43,6 +41,9 @@ func (service *URLShortenerService) DecodeShortURL(alias string) (string, error)
 		return "", err
 	}
 
+	urlData.AccessCount++
+	urlData.AccessTimestamps = append(urlData.AccessTimestamps, time.Now().String())
+
 	return urlData.LongURL, nil
 }
 
@@ -50,8 +51,13 @@ func (service *URLShortenerService) UpdateShortURL(cmd *command.UpdateShortURLCo
 	return nil
 }
 
-func (service *URLShortenerService) GetAnalytics(alias string) error {
-	return nil
+func (service *URLShortenerService) GetAnalytics(alias string) (*model.URLData, error) {
+	urlData, err := service.repo.GetURL(alias)
+	if err != nil {
+		return nil, err
+	}
+
+	return urlData, nil
 }
 
 func (service *URLShortenerService) shortenURL() string {
