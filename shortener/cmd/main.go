@@ -5,7 +5,10 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"url-shortener/internal/config"
 	"url-shortener/utils/httpserver"
+	"url-shortener/utils/routing"
+
 	_ "url-shortener/utils/logging"
 
 	"github.com/rs/zerolog"
@@ -19,7 +22,10 @@ func main() {
 	logger := zerolog.Ctx(ctx).With().Str("service", serviceName).Logger()
 	logger.Info().Msg("Starting microservice")
 
-	go httpserver.StartServer(nil)
+	router := routing.NewDefaultRouter()
+	config.InitializeApp(router)
+
+	go httpserver.StartServer(router)
 
 	signalCh := make(chan os.Signal, 1)
 	signal.Notify(signalCh, syscall.SIGINT, syscall.SIGTERM)
