@@ -2,11 +2,16 @@ package service
 
 import (
 	"math/rand"
+	"strings"
 	"time"
 
 	"url-shortener/internal/command"
 	"url-shortener/internal/model"
 	"url-shortener/internal/repository"
+)
+
+var (
+	HTTPS_PREFIX = "https://"
 )
 
 type URLShortenerService struct {
@@ -44,7 +49,10 @@ func (service *URLShortenerService) DecodeShortURL(alias string) (string, error)
 	urlData.AccessCount++
 	urlData.AccessTimestamps = append(urlData.AccessTimestamps, time.Now().String())
 
-	return urlData.LongURL, nil
+	longURL := urlData.LongURL
+	longURL = strings.Trim(longURL, HTTPS_PREFIX)
+
+	return longURL, nil
 }
 
 func (service *URLShortenerService) UpdateShortURL(cmd *command.UpdateShortURLCommand) error {
