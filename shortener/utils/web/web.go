@@ -2,16 +2,26 @@ package web
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 )
 
-func UnmarshalJSON(r *http.Request, data interface{}) error {
-	body, err := json.Marshal(r.Body)
+// Unmarshals Request's Body into out variable
+func UnmarshalJSON(r *http.Request, out interface{}) error {
+	// Check if request is empty
+	if r.Body == nil {
+		return errors.New("body is empty")
+	}
+
+	// Read Body
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		return err
 	}
 
-	err = json.Unmarshal(body, data)
+	// Unmarshal JSON
+	err = json.Unmarshal(body, out)
 	if err != nil {
 		return err
 	}
