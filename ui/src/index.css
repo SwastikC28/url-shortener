@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body {
+  background: rgb(186, 186, 214);
+  background: linear-gradient(90deg, rgba(186, 186, 214, 1) 0%, rgba(187, 187, 208, 1) 29%, rgba(183, 208, 212, 1) 67%);
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", serif;
+  font-style: normal;
+}
+
+.site-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+main {
+  flex: 1;
+  font-family: 'Inter', sans-serif;
+}
