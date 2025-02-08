@@ -5,11 +5,11 @@ import { BASE_URL } from "../constants/constant";
 
 
 const ShortenedURL = ({ shortURL }) => {
-    if (!shortURL) return null; // Don't render if URL is missing
+    if (!shortURL) return null; 
 
     return (
         <div className="my-4">
-            <Alert key={"light"} variant={"light"}>
+            <Alert key={"success"} variant={"success"}>
                 <strong>Shortened URL :</strong> {shortURL}
                 <p className="my-1">
                     Click{" "}
