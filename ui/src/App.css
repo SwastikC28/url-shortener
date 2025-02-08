@@ -2,3 +2,9 @@
   width: 35%;
   margin: 10rem 0;
 }
+
+.analytics-cont{
+  padding: 2rem;
+  background-color: rgb(235, 235, 235);
+  border-radius: 1rem;
+}
