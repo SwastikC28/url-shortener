@@ -2,14 +2,16 @@ package web
 
 import (
 	"encoding/json"
-	"errors"
+
 	"io"
 	"net/http"
+
+	"url-shortener/utils/errors"
 )
 
 func UnmarshalJSON(r *http.Request, out interface{}) error {
 	if r.Body == nil {
-		return errors.New("body is empty")
+		return errors.NewValidationError("Body cannot be empty")
 	}
 
 	body, err := io.ReadAll(r.Body)
@@ -35,4 +37,17 @@ func RespondJSON(w http.ResponseWriter, statusCode int, data interface{}) {
 
 	w.WriteHeader(statusCode)
 	w.Write(body)
+}
+
+func RespondError(w http.ResponseWriter, err error) {
+	w.Header().Set("content-type", "application/json")
+
+	switch err.(type) {
+	case *errors.ValidationError:
+		w.WriteHeader(400)
+	default:
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.Write([]byte(err.Error()))
 }

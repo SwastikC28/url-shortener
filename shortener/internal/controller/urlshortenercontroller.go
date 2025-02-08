@@ -38,14 +38,14 @@ func (controller *URLShortenerController) shortenURL(w http.ResponseWriter, r *h
 	err := web.UnmarshalJSON(r, &cmd)
 	if err != nil {
 		logger.Err(err).Msg("Error while unmarshalling JSON")
-		web.RespondJSON(w, 400, err)
+		web.RespondError(w, err)
 		return
 	}
 
 	shortURL, err := controller.service.ShortenURL(&cmd)
 	if err != nil {
 		logger.Err(err).Msg("Error while shortening URL")
-		web.RespondJSON(w, 400, err)
+		web.RespondError(w, err)
 		return
 	}
 
@@ -65,7 +65,7 @@ func (controller *URLShortenerController) redirect(w http.ResponseWriter, r *htt
 	url, err := controller.service.DecodeShortURL(shortURL)
 	if err != nil {
 		logger.Err(err).Msg("Unable to decode URL")
-		web.RespondJSON(w, 400, err)
+		web.RespondError(w, err)
 		return
 	}
 
@@ -81,14 +81,14 @@ func (controller *URLShortenerController) updateURL(w http.ResponseWriter, r *ht
 	err := web.UnmarshalJSON(r, cmd)
 	if err != nil {
 		logger.Err(err).Msg("Error while unmarshalling JSON")
-		web.RespondJSON(w, 400, err)
+		web.RespondError(w, err)
 		return
 	}
 
 	err = controller.service.UpdateShortURL(cmd)
 	if err != nil {
 		logger.Err(err).Msg("Error while updating url")
-		web.RespondJSON(w, 400, err)
+		web.RespondError(w, err)
 		return
 	}
 
@@ -104,7 +104,7 @@ func (controller *URLShortenerController) analytics(w http.ResponseWriter, r *ht
 	urlData, err := controller.service.GetAnalytics(alias)
 	if err != nil {
 		logger.Err(err).Msg("Error while getting data")
-		web.RespondJSON(w, 400, err.Error())
+		web.RespondError(w, err)
 		return
 	}
 

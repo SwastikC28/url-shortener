@@ -35,7 +35,10 @@ func (service *URLShortenerService) ShortenURL(cmd *command.CreateShortenURLComm
 		AccessTimestamps: make([]string, 0),
 	}
 
-	service.repo.AddNewURL(&data)
+	err := service.repo.AddNewURL(&data)
+	if err != nil {
+		return "", err
+	}
 
 	return data.ShortURL, nil
 }
