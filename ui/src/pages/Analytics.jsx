@@ -15,22 +15,18 @@ const Analytics = () => {
             )
             return await response.json()
         },
-        enabled: !!shortURL, // <-- Prevents fetching when `shortURL` is undefined
+        enabled: !!shortURL, 
     });
-
-
-    // console.log(data);
-
 
     return (
         <Container className="url-cont analytics-cont">
-            <Row className='mb-5'>
+            <Row className='mb-4'>
                 <Col>
-                    <Button as={Link} to={'/'} variant='light'>Home</Button>
+                    <Button as={Link} to={'/'} variant='secondary'>Home</Button>
                 </Col>
             </Row>
 
-            <Row className='mb-5'>
+            <Row className='mb-2'>
                 <h1>Analytics</h1>
             </Row>
 

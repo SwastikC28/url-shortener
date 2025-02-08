@@ -3,8 +3,6 @@ import { format } from 'date-fns'; // Import the format function from date-fns
 
 
 const Timestamps = (props) => {
-    console.log(props.timestamps);
-
     return (
         <div className='my-5'>
             <h3 className='my-3'>Time stamps</h3>
@@ -25,7 +23,7 @@ const Timestamps = (props) => {
                     return <p key={index}>{formattedTimestamp}</p>;
                 }
 
-                return <p key={index}>Invalid timestamp format</p>;
+                return <p style={{margin:"0px"}} key={index}>Invalid timestamp format</p>;
             })}
         </div>
     );
