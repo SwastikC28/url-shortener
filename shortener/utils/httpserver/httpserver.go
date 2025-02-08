@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 )
 
@@ -19,7 +20,7 @@ func StartServer(router *mux.Router) {
 
 	server = &http.Server{
 		Addr:    fmt.Sprintf("0.0.0.0:%d", config.Port),
-		Handler: router,
+		Handler: CORSMiddleware(router),
 	}
 
 	logger.Info().Msgf("Starting server at port %d", config.Port)
@@ -41,4 +42,14 @@ func StopServer(ctx context.Context) {
 		}
 
 	}
+}
+
+func CORSMiddleware(next http.Handler) http.Handler {
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:3000"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders: []string{"Content-Type", "Authorization"},
+	})
+
+	return c.Handler(next)
 }
