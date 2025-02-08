@@ -44,7 +44,9 @@ func RespondError(w http.ResponseWriter, err error) {
 
 	switch err.(type) {
 	case *errors.ValidationError:
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
+	case *errors.ResourceNotFoundError:
+		w.WriteHeader(http.StatusNotFound)
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
 	}

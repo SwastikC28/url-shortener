@@ -37,7 +37,7 @@ func (inmemorystore *InMemoryStore) Add(data *model.URLData) error {
 func (inmemorystore *InMemoryStore) Delete(alias string) error {
 	exists := inmemorystore.Exists(alias)
 	if !exists {
-		return errors.NewValidationError("resource does not exists in the system")
+		return errors.NewResourceNotFoundError("resource does not exists in the system")
 	}
 
 	delete(inmemorystore.store, alias)
@@ -47,7 +47,7 @@ func (inmemorystore *InMemoryStore) Delete(alias string) error {
 func (inmemorystore *InMemoryStore) Update(data *model.URLData) error {
 	exists := inmemorystore.Exists(data.ShortURL)
 	if !exists {
-		return errors.NewValidationError("resource does not exists in the system")
+		return errors.NewResourceNotFoundError("resource does not exists in the system")
 	}
 
 	inmemorystore.store[data.ShortURL] = data
@@ -62,7 +62,7 @@ func (inmemorystore *InMemoryStore) Exists(alias string) bool {
 func (inmemorystore *InMemoryStore) Get(alias string) (*model.URLData, error) {
 	data, exists := inmemorystore.store[alias]
 	if !exists {
-		return nil, errors.NewValidationError("resource does not exists in the system")
+		return nil, errors.NewResourceNotFoundError("resource does not exists in the system")
 	}
 
 	return data, nil
