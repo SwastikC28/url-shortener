@@ -1,21 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import { Link, useParams } from 'react-router'
 import Timestamps from '../components/Timestamps'
+import { BASE_URL } from '../constants/constant'
 
 const Analytics = () => {
     const { shortURL } = useParams()
 
-    const { isPending, error, data, isFetching } = useQuery({
+    const { isPending, error, data, isFetching, isLoading } = useQuery({
         queryKey: ['analyticsData', shortURL], // <-- Make query key dynamic
         queryFn: async () => {
             const response = await fetch(
-                `http://localhost:8080/analytics/${shortURL}`
+                `${BASE_URL}/analytics/${shortURL}`
             )
             return await response.json()
         },
-        enabled: !!shortURL, 
+        enabled: !!shortURL,
     });
 
     return (
@@ -29,6 +30,12 @@ const Analytics = () => {
             <Row className='mb-2'>
                 <h1>Analytics</h1>
             </Row>
+
+            {isLoading && <div className="d-flex justify-content-center my-5">
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>}
 
             {data && <>
                 <Row className='my-1'>

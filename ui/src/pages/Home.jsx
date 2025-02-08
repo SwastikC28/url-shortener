@@ -3,12 +3,9 @@ import { Button, Container, Form, InputGroup } from "react-bootstrap";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import ShortenedURL from "../components/ShortenedURL";
-
 import Spinner from 'react-bootstrap/Spinner';
-
 
 
 const Home = () => {
